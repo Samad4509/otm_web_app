@@ -37,4 +37,36 @@ class AuthCountroller extends Controller
             'data'=>$user,
         ],200);
     }
+
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+        
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation fails',
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+        $user = User::where('email', $request->email)->first();
+        
+        if (Hash::check($request->password, $user->password)) {
+            $token = $user->createToken('auth-token')->plainTextToken;
+        
+            return response()->json([
+                'message' => 'Login Successful',
+                'token' => $token,
+                'data' => $user
+            ], 200);
+        }  
+        else {
+            return response()->json([
+                'message' => 'Incorrect Password',
+            ], 400);
+        }
+        
+    }
 }
