@@ -15,7 +15,6 @@ class AuthCountroller extends Controller
         $validator = validator::make($request->all(),[
             'name'=>'required|min:2|max:100',
             'email'=>'required|email|unique:users',
-            'phone' =>'required', 'string', 'max:255', 'unique:users', 'regex:/^[0-9\+\-\s]+$/',
             'password'=>'required|min:6|max:100',
             'confirm_password'=>'required|same:password'
         ]);
